@@ -5,9 +5,9 @@ set_property(SOURCE HelloWorld.i PROPERTY CPLUSPLUS ON)
 set_property(SOURCE HelloWorld.i PROPERTY COMPILE_OPTIONS -package $package$)
 
 if (SBT_SOURCE_MANAGED)
-  set(JAVA_OUTPUT_DIR ${SBT_SOURCE_MANAGED}/$package;format="package-dir"$)
+  set(JAVA_OUTPUT_DIR \${SBT_SOURCE_MANAGED}/$package;format="package-dir"$)
 else()
-  set(JAVA_OUTPUT_DIR ${PROJECT_BINARY_DIR}/src_managed/main/java/$package;format="package-dir"$)
+  set(JAVA_OUTPUT_DIR \${PROJECT_BINARY_DIR}/src_managed/main/java/$package;format="package-dir"$)
 endif()
 
 swig_add_library(HelloWorld_swig TYPE OBJECT
