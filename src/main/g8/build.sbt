@@ -12,7 +12,7 @@ cmakeSetup := {
   s"rm -rf " !
 
   // Configure the CMake build to output generated Java into `sourceManaged`.
-  s"cmake -S \${sourceDirectory.value} -B \${target.value}/cmake -G Ninja -D SBT_SOURCE_MANAGED:PATH=\${sourceManaged.value}" !
+  s"cmake -S \${sourceDirectory.value} -B \${target.value}/cmake -G Ninja -D SBT_SOURCE_MANAGED:PATH=\${sourceManaged.value}/cmake" !
 }
 
 cmakeBuild := {
