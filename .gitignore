@@ -1,0 +1,12 @@
+# Eclipse IDE
+/.cache-main
+/.classpath
+/.project
+/.settings/
+/bin/
+
+# sbt
+/project/plugins/project/
+/project/project/target/
+/project/target/
+/target/
