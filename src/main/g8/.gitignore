@@ -13,7 +13,6 @@
 /.vscode/
 
 # sbt
-/project/plugins/project/
-/project/project/target/
+/project/project/
 /project/target/
 /target/

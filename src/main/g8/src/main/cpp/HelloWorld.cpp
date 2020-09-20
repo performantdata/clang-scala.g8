@@ -1,15 +1,14 @@
 #include <iostream>
 #include "example/HelloWorld.h"
-using namespace std;
 
 namespace example {
 
   HelloWorld::HelloWorld() {
-    cout << "Hello world!";
+    std::cout << "Hello world!";
   }
 
   HelloWorld::~HelloWorld() {
-    cout << "Goodbye, cruel world!";
+    std::cout << "Goodbye, cruel world!";
   }
 
-} /* namespace example */
+} // namespace example
