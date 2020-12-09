@@ -1,17 +1,19 @@
 name: test
 on: push
 jobs:
-  test:
-    name: Test the template
+  debian-10-test:
+    name: Test the template on Debian 10
     runs-on: ubuntu-latest
     container:
       image: debian:buster-backports
     steps:
       - name: Install tools
         run: |
+          echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
+          curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2EE0EA64E40A89B84B2DF73499E82A75642AC823" | sudo apt-key add
           apt-get -qq update
-          apt-get -qq install doxygen-gui doxygen-doc swig
-          apt-get -qq -t buster-backports install cmake-qt-gui cmake-doc clang-8 clang-8-doc libc++1-8 ninja-build sbt
+          apt-get -qq install doxygen-gui doxygen-doc swig sbt
+          apt-get -qq -t buster-backports install cmake-qt-gui cmake-doc clang-8 clang-8-doc libc++1-8 ninja-build
 
       - name: Checkout code
         uses: actions/checkout@v2
