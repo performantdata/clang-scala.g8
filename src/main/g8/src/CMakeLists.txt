@@ -11,7 +11,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_EXTENSIONS OFF)
 add_compile_options("-g")
 
-#include(dependencies.cmake)
+include(shims.cmake)
+include(dependencies.cmake)
 
 # Set up to generate JNI interfaces
 
@@ -25,9 +26,9 @@ add_subdirectory(main)
 
 # Only do these if this is the main project, and not if it is included through `add_subdirectory()`.
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-#  include(GoogleTest)
+  include(CTest)
   if(BUILD_TESTING)
-#    add_subdirectory(test)
+    add_subdirectory(test/cpp)
   endif()
 
   find_package(Doxygen OPTIONAL_COMPONENTS dot)

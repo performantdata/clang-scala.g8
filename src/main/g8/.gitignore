@@ -4,15 +4,21 @@
 # Eclipse IDE
 /.cache-main
 /.classpath
+/.cproject
 /.project
 /.settings/
 /bin/
 
 # Visual Studio Code
+/.bloop/
 /.metals/
 /.vscode/
+/project/.bloop/
 
 # sbt
 /project/project/
 /project/target/
 /target/
+
+# CTest
+/Testing/
