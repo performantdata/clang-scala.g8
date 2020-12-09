@@ -10,7 +10,7 @@ jobs:
       - name: Install Linux tools
         run: |
           apt-get -qq update
-          apt-get -qq curl gnupg sudo
+          apt-get -qq install curl gnupg sudo
 
       - name: Install compilation tools
         run: |
