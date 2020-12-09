@@ -9,10 +9,9 @@ jobs:
     steps:
       - name: Install tools
         run: |
-          apt-get update
-          apt-get install doxygen-gui doxygen-doc swig
-          apt-get -t buster-backports install cmake-qt-gui cmake-doc clang-8 clang-8-doc libc++1-8 ninja-build sbt
-
+          apt-get -qq update
+          apt-get -qq install doxygen-gui doxygen-doc swig
+          apt-get -qq -t buster-backports install cmake-qt-gui cmake-doc clang-8 clang-8-doc libc++1-8 ninja-build sbt
 
       - name: Checkout code
         uses: actions/checkout@v2
