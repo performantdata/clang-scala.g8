@@ -28,3 +28,12 @@ message(VERBOSE "Added ${catch2_SOURCE_DIR}/contrib to CMAKE_MODULE_PATH.")
 # See https://github.com/google/googletest/tree/master/googletest/README.md#incorporating-into-an-existing-cmake-project .
 # FetchContent_MakeAvailable(googletest)
 
+# The C++ Guidelines Support Library, Microsoft implementation
+FetchContent_Declare(
+  gsl
+  GIT_REPOSITORY https://github.com/Microsoft/GSL.git
+  GIT_TAG        origin/master
+  GIT_SHALLOW    True
+)
+FetchContent_MakeAvailable(gsl)
+include_directories(${gsl_SOURCE_DIR}/include)

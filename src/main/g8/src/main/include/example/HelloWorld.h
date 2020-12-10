@@ -1,15 +1,24 @@
 #ifndef EXAMPLE_HELLOWORLD_H_
 #define EXAMPLE_HELLOWORLD_H_
 
+#include <vector>
+
 namespace example {
 
-/**
- * My life, in two acts.
- */
+/** A simple example of passing vectors. */
 class HelloWorld {
+private:
+  std::vector<char> vec;
+
 public:
-  HelloWorld();
-  virtual ~HelloWorld();
+  /** Append the given vector to our internal vector.
+   *
+   * @return this object
+   */
+  HelloWorld & append(std::vector<char> v);
+
+  /** Return our internal vector. */
+  std::vector<char> get() const;
 };
 
 }

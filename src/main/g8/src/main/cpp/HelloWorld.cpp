@@ -1,14 +1,14 @@
-#include <iostream>
 #include "example/HelloWorld.h"
 
 namespace example {
 
-  HelloWorld::HelloWorld() {
-    std::cout << "Hello world!";
-  }
+HelloWorld &
+HelloWorld::append(std::vector<char> v) {
+  vec.insert(vec.end(), v.begin(), v.end());
+  return *this;
+}
 
-  HelloWorld::~HelloWorld() {
-    std::cout << "Goodbye, cruel world!";
-  }
+std::vector<char>
+HelloWorld::get() const { return vec; }
 
 } // namespace example
