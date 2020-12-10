@@ -1,5 +1,9 @@
 name: test
 on: push
+env:
+  # Name of the template instance
+  INSTANCE_NAME: test-deploy
+
 jobs:
   debian-10-test:
     name: Test on Debian 10
@@ -17,7 +21,7 @@ jobs:
           echo "deb https://dl.bintray.com/sbt/debian /" >/etc/apt/sources.list.d/sbt.list
           curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2EE0EA64E40A89B84B2DF73499E82A75642AC823" | apt-key add
           apt-get -qq update
-          apt-get -qq -o=Dpkg::Use-Pty=0 install doxygen-gui doxygen-doc swig sbt
+          apt-get -qq -o=Dpkg::Use-Pty=0 install doxygen-gui doxygen-doc openjdk-11-jdk swig sbt
           apt-get -qq -o=Dpkg::Use-Pty=0 -t buster-backports install cmake-qt-gui cmake-doc clang-8 clang-8-doc libc++1-8 ninja-build
 
       - name: Checkout code
@@ -31,17 +35,17 @@ jobs:
 
       - name: Instantiate the template
         run: |
-          dir=$(pwd)
           cd ..
-          sbt new file://"$dir" --name=test-deploy --package=com.test
+          sbt new file://"$GITHUB_WORKSPACE" --name=$INSTANCE_NAME --package=com.test
 
       - name: Let's see what's here now
         run: |
+          cd ..
           pwd
           tree -h
 
       - name: Run CMake build
         run: |
-          cd test-deploy
+          cd ../$INSTANCE_NAME
           cmake -S src -B target/cmake -G Ninja
           cmake --build target/cmake
