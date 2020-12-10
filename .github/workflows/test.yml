@@ -1,9 +1,6 @@
 name: test
 on: push
 env:
-  # compilers
-  CC: /usr/bin/clang
-  CXX: /usr/bin/clang++
   # name of the template instance
   INSTANCE_NAME: test-deploy
 
@@ -13,6 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: debian:buster-backports
+      env:
+        CC: /usr/bin/clang-8
+        CXX: /usr/bin/clang++-8
+
     steps:
       - name: Install Linux tools
         run: |
@@ -30,25 +31,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Let's see what's here
-        run: |
-          pwd
-          cd ../..
-          tree -h
-
       - name: Instantiate the template
         run: |
           cd ..
           sbt -Dsbt.ci=true new file://"$GITHUB_WORKSPACE" --name=$INSTANCE_NAME --package=com.test
-
-      - name: Let's see what's here now
-        run: |
-          cd ..
-          pwd
-          tree -h
 
       - name: Run CMake build
         run: |
           cd ../$INSTANCE_NAME
           cmake -S src -B target/cmake -G Ninja
           cmake --build target/cmake
+
+      - name: Let's see the files
+        run: |
+          cd ../$INSTANCE_NAME
+          tree -h
