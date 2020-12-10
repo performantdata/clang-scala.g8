@@ -1,7 +1,10 @@
 name: test
 on: push
 env:
-  # Name of the template instance
+  # compilers
+  CC: /usr/bin/clang
+  CXX: /usr/bin/clang++
+  # name of the template instance
   INSTANCE_NAME: test-deploy
 
 jobs:
@@ -36,7 +39,7 @@ jobs:
       - name: Instantiate the template
         run: |
           cd ..
-          sbt new file://"$GITHUB_WORKSPACE" --name=$INSTANCE_NAME --package=com.test
+          sbt -Dsbt.ci=true new file://"$GITHUB_WORKSPACE" --name=$INSTANCE_NAME --package=com.test
 
       - name: Let's see what's here now
         run: |
