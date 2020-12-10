@@ -26,9 +26,22 @@ jobs:
       - name: Let's see what's here
         run: |
           pwd
+          cd ../..
+          tree -h
+
+      - name: Instantiate the template
+        run: |
+          dir=$(pwd)
+          cd ..
+          sbt new file://"$dir" --name=test-deploy --package=com.test
+
+      - name: Let's see what's here now
+        run: |
+          pwd
           tree -h
 
       - name: Run CMake build
         run: |
+          cd test-deploy
           cmake -S src -B target/cmake -G Ninja
           cmake --build target/cmake
