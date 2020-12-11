@@ -15,6 +15,17 @@ jobs:
         CXX: /usr/bin/clang++-8
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Cache sbt dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.ivy2/cache
+            ~/.sbt
+          key: sbt
+
       - name: Install Linux tools
         run: |
           apt-get -qq update
@@ -27,9 +38,6 @@ jobs:
           apt-get -qq update
           apt-get -qq -o=Dpkg::Use-Pty=0 install doxygen-gui doxygen-doc openjdk-11-jdk swig sbt
           apt-get -qq -o=Dpkg::Use-Pty=0 -t buster-backports install cmake-qt-gui cmake-doc clang-8 clang-8-doc libc++1-8 ninja-build
-
-      - name: Checkout code
-        uses: actions/checkout@v2
 
       - name: Instantiate the template
         run: |
