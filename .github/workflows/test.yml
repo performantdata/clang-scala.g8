@@ -18,6 +18,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      # Relative path elements aren't allowed in cache paths.
+      - name: Get parent directory
+        id: get-parent
+        run: echo "::set-output name=parent::$(/usr/bin/dirname $(pwd))"
+        shell: bash
+
       - name: Cache sbt dependencies
         uses: actions/cache@v2
         with:
@@ -29,7 +35,7 @@ jobs:
       - name: Cache CMake dependencies
         uses: actions/cache@v2
         with:
-          path: $GITHUB_WORKSPACE/test/$INSTANCE_NAME/target/cmake/_deps
+          path: ${{ steps.get-parent.outputs.parent }}/test/$INSTANCE_NAME/target/cmake/_deps
           key: cmake
 
       - name: Install Linux tools
@@ -47,18 +53,18 @@ jobs:
 
       - name: Instantiate the template
         run: |
-          mkdir test
-          cd test
+          mkdir ../test
+          cd ../test
           sbt -Dsbt.ci=true -Dsbt.supershell=false new file://"$GITHUB_WORKSPACE" --name=$INSTANCE_NAME --package=com.test
 
       - name: Run CMake build
         run: |
-          cd test/$INSTANCE_NAME
+          cd ../test/$INSTANCE_NAME
           cmake -S src -B target/cmake -G Ninja
           cmake --build target/cmake
           (cd target/cmake; ctest -VV)
 
       - name: Let's see the files
         run: |
-          cd test/$INSTANCE_NAME
+          cd ../test/$INSTANCE_NAME
           tree -h
