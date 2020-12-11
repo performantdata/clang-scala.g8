@@ -1,7 +1,12 @@
-# A [Giter8][g8] template for combined Clang/Scala projects.
+![test status](https://github.com/performantdata/clang-scala.g8/workflows/test/badge.svg)
+
+# A [Giter8][g8] template for combined Clang/Scala projects
 
 This template generates a skeleton project that contains both Clang and Scala code.
 The goal is to make all of this work together in a natural way.
+It's aimed at Scala and Java developers who aren't up-to-date on C++ environment setup,
+and aims to get them started with a working example.
+
 Specific goals (not all achieved yet) are:
 
 - The project's directory structure supports multiple languages in a natural way.
@@ -27,6 +32,7 @@ Instructions are only given for Debian 10 currently.
 
 ### Debian 10
 Prepare Aptitude per the [sbt download][sbt-download] and [backports instructions][buster-backports].
+I added backports in order to pick up a 3.14+ CMake.
 
 Sbt, CMake, Ninja, Clang and Doxygen are installed in the usual Debian way. It's probably useful to pick up a few extras, too:
 ```shell
@@ -79,60 +85,77 @@ You can think of it as two overlapping trees: one for the sbt build, and one for
 
 ## IDE configuration
 
-The template **does not** generate IDE-specific files; that's left to the user, as follows.
-(There's nothing about these instructions that's specific to this template.
- These are the usual ways of importing Scala and Clang projects.)
+This is discussed on [a separate page](doc/IDE.md).
 
-### [Eclipse CDT][cdt] (C/C++)
+## further reading
 
-I'll assume that you have Eclipse CDT configured for the Clang/LLVM toolchain, and Cmake4eclipse.
-If not, read [my blog post on installing these tools][blog-clang].
+The following tools are commonly used in C++ development. This is an opinionated list.
 
-To import the project:
+- [Clang]
 
-- Follow the instructions on <https://github.com/sbt/sbteclipse>.
-  This adds the Scala and Java natures and sets up the source directory.
-- From the menu, choose File &gt; Import… &gt; Existing Projects into Workspace.
-  Choose the directory that the template created.
-- In the Project Explorer view, open the menu on the project directory,
-  choose New &gt; Convert to a C/C++ Project (Adds C/C++ Nature).
+  Some use [GCC] rather than Clang, but that's not the direction that I'm going.
+  Future versions of this project will interface with OpenJDK's new GraalVM, which requires LLVM IR.
 
-Delete the `CMakeLists.txt` and `*.cpp` files that the Eclipse wizard created in the project directory.
+- [SWIG]
 
-In the project's <kbd><samp>Properties</samp></kbd> page,
-under <kbd><samp>C/C++ Build &gt; Cmake4eclipse &gt; Host OS overrides,
-for the "Buildscript generator (-G)", choose Ninja.
-Under C/C++ Build &gt; Environment,
-for the <samp>Configuration</samp> "[ All configurations ]",
-set the `CC` and `CXX` variables to your `clang` and `clang++` paths, respectively.
+  Some use Java tools like `javac -h` to generate a JNI API from Java code.
+  The advantage of SWIG is that it works from a C/C++ header-like syntax, generating the APIs for other languages.
+  So it can not only generate a JNI API, but also APIs for Python, etc. from the same specification.
 
-### [IntelliJ IDEA][idea]
+  Eventually, as GraalVM matures, I would hope that other languages would adopt it as their runtime.
+  Then there would be no need for SWIG. But that's years away.
 
-#### C++
-I don't have [the IntelliJ C++ trial-use products][intellij-cpp], so can't help you there.
+- [CMake]
 
-#### Scala
-For the Scala product, import the project as an sbt project.
-It seems to be necessary to ["Use sbt shell" "for builds"][ideasbt],
-due to the inclusion of CMake CLI calls in the sbt build configuration confusing the internal builder.
+  If you're new to CMake, [the tutorial][cmake-tut] is an obvious place to start,
+  but I found that reading about [its build system][cmake-buildsystem] in parallel helps.
+  [The language description][cmake-language] is also enlightening on basic syntax.
+  For a more gradual description via examples, you may find
+  [_CMake Cookbook_ (2018)][cmake-cookbook] online via your local library.
 
-In order to get the `HelloWorldSpec` test to succeed,
-it's necessary to set the environment variable `LD_LIBRARY_PATH` to `target/cmake/main/cpp:$LD_LIBRARY_PATH`
-in its run configuration.
+- [Ninja]
 
-### [VSCodium][vscodium]
+  If you're new to Ninja, just think of it as an intermediate representation for build scripting.
+  Or as UNIX Makefiles, stripped down for fast execution.
+  You shouldn't need to work with Ninja code directly.
 
-Not really an IDE, just an editor, but with much of the functionality.
+- [Catch2]
 
-[g8]: http://www.foundweekends.org/giter8/
-[mod]: https://cliutils.gitlab.io/modern-cmake/chapters/basics/structure.html
-[blog-clang]: https://blog.performantdata.com/
+  Some use [Googletest] rather than Catch2, but I prefer the BDD style.
+
+- [Doxygen]
+
+## related work
+
+Similar instructions to these can be found in the book [_Advanced C++_ (2019)][advanced-c++],
+which may be available online through your library.
+(I started on this project well before discovering this book.)
+
+Mizux Seiha maintains [a project demonstrating a polyglot CMake + SWIG project][mizux-cmake-swig].
+It addresses CI, portable CMake, and SWIG code generation for Java/Python/.NET with language-specific tests and packaging,
+but doesn't go so far as to make it a template for new projects.
+My project doesn't care about CMake portability, since I expect high-performance code to run only on Linux.
+It's also intended for non-trivial development in the targeted scripting languages in an IDE,
+for providing a portable fallback implementation should a native code version be unavailable.
+
+
+[advanced-c++]: https://en.wikipedia.org/wiki/Special:BookSources?isbn=9781838821135
 [buster-backports]: https://backports.debian.org/Instructions/
-[cdt]: https://www.eclipse.org/cdt/
+[catch2]: https://github.com/catchorg/Catch2
+[clang]: https://clang.llvm.org/
+[cmake]: https://cmake.org/
+[cmake-buildsystem]: https://cmake.org/cmake/help/v3.18/manual/cmake-buildsystem.7.html
+[cmake-cookbook]: https://en.wikipedia.org/wiki/Special:BookSources?isbn=1788470710
 [cmake-env]: https://cmake.org/cmake/help/latest/manual/cmake-env-variables.7.html#environment-variables-for-languages
-[idea]: https://www.jetbrains.com/idea/
-[ideasbt]: https://www.jetbrains.com/help/idea/sbt-support.html#sbt_settings
-[intellij-cpp]: https://www.jetbrains.com/cpp/
+[cmake-language]: https://cmake.org/cmake/help/latest/manual/cmake-language.7.html
+[cmake-tut]: https://cmake.org/cmake/help/latest/guide/tutorial/index.html
+[doxygen]: https://www.doxygen.nl/
+[g8]: http://www.foundweekends.org/giter8/
+[gcc]: https://gcc.gnu.org/
+[googletest]: https://github.com/google/googletest
+[mizux-cmake-swig]: https://github.com/Mizux/cmake-swig
+[mod]: https://cliutils.gitlab.io/modern-cmake/chapters/basics/structure.html
+[ninja]: https://ninja-build.org/
 [sbt-directories]: https://www.scala-sbt.org/1.x/docs/Directories.html
 [sbt-download]: https://www.scala-sbt.org/download.html
-[vscodium]: https://vscodium.com/
+[swig]: http://www.swig.org/

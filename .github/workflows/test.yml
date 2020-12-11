@@ -26,6 +26,12 @@ jobs:
             ~/.sbt
           key: sbt
 
+      - name: Cache CMake dependencies
+        uses: actions/cache@v2
+        with:
+          path: $GITHUB_WORKSPACE/../test/$INSTANCE_NAME/target/cmake/_deps
+          key: cmake
+
       - name: Install Linux tools
         run: |
           apt-get -qq update
